@@ -2,15 +2,16 @@ package com.bolsaidea.app;
 
 import com.bolsaidea.app.dao.IClienteDao;
 import com.bolsaidea.app.entity.Cliente;
+import com.bolsaidea.app.paginator.PageRender;
 import com.bolsaidea.app.services.IClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import javax.validation.Valid;
@@ -22,9 +23,13 @@ public class ClienteController {
     @Autowired
     private IClienteService clienteService;
     @RequestMapping(value="listar",method = RequestMethod.GET)
-    public String listar(Model model){
+    public String listar(@RequestParam(name="page",defaultValue ="0" ) int page, Model model){
+        Pageable pageRequest = new PageRequest(page,5);
+        Page<Cliente> clientes = clienteService.findAll(pageRequest);
+        PageRender<Cliente> pageRender = new PageRender<Cliente>("/listar", clientes);
         model.addAttribute("titulo","Listado Clientes");
-        model.addAttribute("clientes",clienteService.findAll());
+        model.addAttribute("clientes",clientes);
+        model.addAttribute("page",pageRender);
         return "listar";
     }
     @RequestMapping(value="/form")
