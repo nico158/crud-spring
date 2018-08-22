@@ -1,18 +1,10 @@
 package com.bolsaidea.app.dao;
 
 import com.bolsaidea.app.entity.Cliente;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-import java.util.List;
+public interface IClienteDao extends PagingAndSortingRepository<Cliente, Long> {
 
-
-public interface IClienteDao {
-
-    public List<Cliente> findAll();
-
-    public void save(Cliente cliente);
-
-    public Cliente findOne(Long id);
-
-    public void delete(Long id);
 
 }
